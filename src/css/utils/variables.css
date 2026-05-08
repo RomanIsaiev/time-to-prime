@@ -15,8 +15,24 @@
 
   /* Backdrop */
   --background-color: rgba(0, 0, 0, 0.6);
+  --background-light-pink: #ffecf1;
+  /* Colors */
+  --color-black: #262626;
+  --color-pink: #ffa6c2;
+  --color-pink-light: #ffcfdb;
+  --color-snow: #fafafa;
+  --color-white: #ffffff;
+  --color-grey: #7d7a7a;
+  --color-grey-light: #d9d9d9;
+  --color-grey-lighter: #f7f7f7;
+  --color-rose: #ffedf2;
+  --color-wine: #3d0d17;
+  --color-burgundy: #8a052e;
+  --color-blue: #1a78bf;
+  --color-blush: #ffe6ed;
+  --dark-red: #3c0e18;
 
   /* Fonts */
-  --primary-font-family: 'Manrope', sans-serif;
+  --primary-font-family: 'Gilroy', system-ui, sans-serif;
   --accent-font-family: 'Mulish', sans-serif;
 }
