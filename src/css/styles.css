@@ -41,6 +41,25 @@ body {
   object-fit: cover;
 }
 
+.h2-title {
+  color: var(--black, #262626);
+  font-family: Gilroy;
+  font-size: 1.875rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 105%; /* 31.5px */
+  letter-spacing: -0.075rem;
+  text-transform: uppercase;
+}
+
+.h2-title span {
+  font-family: Ouvality;
+  font-size: 3.875rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 100%; /* 62px */
+}
+
 /* HERO */
 
 .hero {
@@ -402,25 +421,6 @@ section {
   margin-bottom: 1rem;
 }
 
-.program .program-title {
-  color: var(--black, #262626);
-  font-family: Gilroy;
-  font-size: 1.875rem;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 105%; /* 31.5px */
-  letter-spacing: -0.075rem;
-  text-transform: uppercase;
-}
-
-.program .program-title span {
-  font-family: Ouvality;
-  font-size: 3.875rem;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 100%; /* 62px */
-}
-
 .program .program-list {
   display: flex;
   flex-direction: column;
@@ -662,7 +662,7 @@ section {
 .item-show-box {
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.45s ease;
+  transition: all 0.45s ease;
 }
 
 .program-plus {
@@ -680,6 +680,152 @@ section {
   transform: rotate(45deg);
 }
 
+.program-item.is-open .item-icon-box {
+  background-color: var(--pink, #fea6c3);
+}
+
 .program-item.is-open .program-plus path {
   fill: #ffffff;
+}
+
+/* STUDY FORMAT */
+
+.section {
+}
+.study-format.pink {
+  background: var(--super-light-pink, #ffecf1);
+}
+
+.study-format .container {
+}
+
+.study-format .format-title-wrap {
+  text-align: center;
+  position: relative;
+  max-width: 16.75rem;
+  margin: 0 auto 1.875rem;
+}
+
+.study-format .h2-title {
+  position: relative;
+  z-index: 2;
+}
+
+.study-format .format-subtitle {
+  margin-top: -2rem;
+
+  display: inline-block;
+  color: var(--black, #262626);
+  font-family: Gilroy;
+  font-size: 1.875rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 105%; /* 31.5px */
+  letter-spacing: -0.075rem;
+  text-transform: uppercase;
+
+  padding: 0.25rem 0.75rem 0.2rem;
+  border-radius: 0.3125rem;
+  background: var(--light-pink, #ffcfdc);
+  transform: rotate(4deg);
+}
+
+.study-format .format-star {
+  position: absolute;
+  right: 0.5rem;
+  top: 0.2rem;
+  width: 4.375rem;
+  height: 4.375rem;
+  transform: rotate(22deg);
+}
+
+.study-format .format-wrapper {
+}
+
+.study-format .format-item {
+  padding: 2rem 0.75rem;
+  border-bottom: 1px solid #ffcfdc;
+}
+
+.study-format .format-name-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.study-format .format-name {
+  color: var(--black, #262626);
+  font-family: Gilroy;
+  font-size: 1.375rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 105%; /* 23.1px */
+  letter-spacing: -0.0413rem;
+
+  max-width: 18.75rem;
+}
+
+.study-format .format-arrow {
+  width: 0.625rem;
+  flex-shrink: 0;
+}
+
+.study-format .format-show-box {
+}
+
+.study-format .format-padding-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-top: 0.625rem;
+}
+
+.study-format .format-text {
+  color: var(--black, #262626);
+  font-family: Gilroy;
+  font-size: 0.9375rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 125%; /* 18.75px */
+  letter-spacing: -0.0094rem;
+
+  max-width: 18.75rem;
+}
+
+.study-format .format-text span {
+  font-weight: 700;
+}
+
+/* STUDY FORMAT FROM JS CODE */
+
+.study-format .format-show-box {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease;
+}
+
+.study-format .format-item {
+  padding: 2rem 0.75rem;
+  border-bottom: 1px solid #ffcfdc;
+  transition:
+    background-color 0.3s ease,
+    border-radius 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.study-format .format-item.is-open {
+  border-radius: 10px;
+  background: var(--light-pink, #ffcfdc);
+}
+
+.study-format .format-item.is-before-open {
+  border-bottom-color: transparent;
+}
+
+.study-format .format-name-box {
+  cursor: pointer;
+}
+
+.study-format .format-arrow {
+  transition: transform 0.3s ease;
 }
