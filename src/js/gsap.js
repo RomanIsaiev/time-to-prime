@@ -17,6 +17,51 @@ window.addEventListener('load', () => {
     once: true,
   };
 
+  // --- Scroll state ---
+  let refreshTimer;
+  let scrollTimer;
+  let isScrolling = false;
+  let pendingRefresh = false;
+
+  function scheduleRefresh(delay) {
+    clearTimeout(refreshTimer);
+    refreshTimer = setTimeout(() => {
+      if (typeof ScrollTrigger === 'undefined') return;
+      ScrollTrigger.refresh();
+      pendingRefresh = false;
+    }, delay);
+  }
+
+  function refreshScrollTriggers(delay = 350) {
+    if (typeof ScrollTrigger === 'undefined') return;
+
+    pendingRefresh = true;
+
+    if (!isScrolling) {
+      scheduleRefresh(delay);
+    }
+  }
+
+  function watchScrollState() {
+    window.addEventListener(
+      'scroll',
+      () => {
+        isScrolling = true;
+        clearTimeout(scrollTimer);
+
+        scrollTimer = setTimeout(() => {
+          isScrolling = false;
+
+          if (pendingRefresh) {
+            scheduleRefresh(100);
+          }
+        }, 150);
+      },
+      { passive: true }
+    );
+  }
+
+  // --- Helpers ---
   function getItems(section, selectors) {
     return selectors
       .map(selector => section.querySelector(selector))
@@ -57,38 +102,25 @@ window.addEventListener('load', () => {
     });
   }
 
-  function refreshScrollTriggers(delay = 350) {
-    if (typeof ScrollTrigger === 'undefined') return;
-
-    clearTimeout(refreshScrollTriggers.timer);
-
-    refreshScrollTriggers.timer = setTimeout(() => {
-      ScrollTrigger.refresh();
-    }, delay);
-  }
-
+  // --- Dynamic sections (accordions) ---
   function watchDynamicSections() {
     const dynamicSections = document.querySelectorAll(
       '.program, .study-format, .result, .tariffs, .faq'
     );
 
-    dynamicSections.forEach(section => {
-      section.addEventListener('click', () => {
-        refreshScrollTriggers(450);
-      });
+    const relevantProps = new Set([
+      'height',
+      'max-height',
+      'padding',
+      'opacity',
+    ]);
 
+    dynamicSections.forEach(section => {
       section.addEventListener(
         'transitionend',
         event => {
-          const property = event.propertyName;
-
-          if (
-            property === 'height' ||
-            property === 'max-height' ||
-            property === 'padding' ||
-            property === 'opacity'
-          ) {
-            refreshScrollTriggers(100);
+          if (relevantProps.has(event.propertyName)) {
+            refreshScrollTriggers(200);
           }
         },
         true
@@ -96,6 +128,7 @@ window.addEventListener('load', () => {
     });
   }
 
+  // --- Sections ---
   function animateHeroSection() {
     const section = document.querySelector('.hero');
 
@@ -103,12 +136,6 @@ window.addEventListener('load', () => {
 
     const startWrap = section.querySelector('.hero-start-wrap');
     const shortDesc = section.querySelector('.hero-short-desc');
-    const title = section.querySelector('.hero-title-img-box');
-    const desc = section.querySelector('.hero-desc');
-    const button = section.querySelector('.star-ticket-btn');
-    const buttonImg = section.querySelector('.star-ticket-btn .img-100');
-
-    console.log(buttonImg);
 
     const items = [startWrap, shortDesc].filter(Boolean);
 
@@ -202,9 +229,7 @@ window.addEventListener('load', () => {
 
     if (!icons.length) return;
 
-    gsap.set(icons, {
-      opacity: 0,
-    });
+    gsap.set(icons, { opacity: 0 });
 
     gsap.to(icons, {
       opacity: 1,
@@ -238,6 +263,7 @@ window.addEventListener('load', () => {
     ]);
   }
 
+  // --- Init ---
   function initAnimations() {
     animateHeroSection();
     animateStudyForYouSection();
@@ -252,6 +278,7 @@ window.addEventListener('load', () => {
     animateFaqSection();
     animateFooterSection();
 
+    watchScrollState();
     watchDynamicSections();
 
     if (typeof ScrollTrigger !== 'undefined') {
