@@ -3,64 +3,46 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (!items.length) return;
 
-  let refreshTimer;
+  function updateBeforeOpenClass() {
+    items.forEach(item => item.classList.remove('is-before-open'));
 
-  function refreshScrollTriggers(delay = 100) {
-    if (typeof ScrollTrigger === 'undefined') return;
+    const openedItem = document.querySelector(
+      '.study-format .format-item.is-open'
+    );
 
-    clearTimeout(refreshTimer);
-
-    refreshTimer = setTimeout(() => {
-      ScrollTrigger.refresh();
-    }, delay);
-  }
-
-  function closeItem(item) {
-    const content = item.querySelector('.format-show-box');
-    const arrow = item.querySelector('.format-arrow');
-
-    if (!item.classList.contains('is-open')) return;
-
-    item.classList.remove('is-open');
-    item.classList.remove('is-before-open');
-
-    if (content) {
-      content.style.maxHeight = `${content.scrollHeight}px`;
-
-      requestAnimationFrame(() => {
-        content.style.maxHeight = '0px';
-      });
-    }
-
-    if (arrow) {
-      arrow.style.transform = 'rotate(0deg)';
-    }
-  }
-
-  function openItem(item) {
-    const content = item.querySelector('.format-show-box');
-    const arrow = item.querySelector('.format-arrow');
-    const prevItem = item.previousElementSibling;
-
-    if (item.classList.contains('is-open')) return;
-
-    item.classList.add('is-open');
+    const prevItem = openedItem?.previousElementSibling;
 
     if (prevItem && prevItem.classList.contains('format-item')) {
       prevItem.classList.add('is-before-open');
     }
+  }
 
-    if (content) {
+  function closeItem(item) {
+    const content = item.querySelector('.format-show-box');
+
+    if (!item.classList.contains('is-open') || !content) return;
+
+    item.classList.remove('is-open');
+
+    content.style.maxHeight = `${content.scrollHeight}px`;
+
+    requestAnimationFrame(() => {
       content.style.maxHeight = '0px';
+    });
+  }
 
-      requestAnimationFrame(() => {
-        content.style.maxHeight = `${content.scrollHeight}px`;
-      });
-    }
+  function openItem(item) {
+    const content = item.querySelector('.format-show-box');
 
-    if (arrow) {
-      arrow.style.transform = 'rotate(90deg)';
-    }
+    if (item.classList.contains('is-open') || !content) return;
+
+    item.classList.add('is-open');
+
+    content.style.maxHeight = '0px';
+
+    requestAnimationFrame(() => {
+      content.style.maxHeight = `${content.scrollHeight}px`;
+    });
   }
 
   items.forEach((item, index) => {
@@ -69,21 +51,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (!trigger || !content) return;
 
-    content.style.maxHeight = '0px';
     content.style.overflow = 'hidden';
-
-    content.addEventListener('transitionend', event => {
-      if (event.propertyName !== 'max-height') return;
-
-      if (item.classList.contains('is-open')) {
-        content.style.maxHeight = `${content.scrollHeight}px`;
-      }
-
-      refreshScrollTriggers();
-    });
+    content.style.maxHeight = '0px';
 
     if (index === 0) {
-      openItem(item);
+      item.classList.add('is-open');
+      content.style.maxHeight = `${content.scrollHeight}px`;
     }
 
     trigger.addEventListener('click', () => {
@@ -101,19 +74,21 @@ document.addEventListener('DOMContentLoaded', () => {
         openItem(item);
       }
 
-      refreshScrollTriggers(450);
+      updateBeforeOpenClass();
     });
   });
+
+  updateBeforeOpenClass();
 
   window.addEventListener('resize', () => {
     const openedItem = document.querySelector(
       '.study-format .format-item.is-open'
     );
+
     const openedContent = openedItem?.querySelector('.format-show-box');
 
     if (openedContent) {
       openedContent.style.maxHeight = `${openedContent.scrollHeight}px`;
-      refreshScrollTriggers();
     }
   });
 });

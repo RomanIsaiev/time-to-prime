@@ -3,18 +3,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (!programItems.length) return;
 
-  let refreshTimer;
-
-  function refreshScrollTriggers(delay = 100) {
-    if (typeof ScrollTrigger === 'undefined') return;
-
-    clearTimeout(refreshTimer);
-
-    refreshTimer = setTimeout(() => {
-      ScrollTrigger.refresh();
-    }, delay);
-  }
-
   function closeItem(item) {
     const content = item.querySelector('.item-show-box');
 
@@ -49,21 +37,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (!title || !content) return;
 
-    content.style.maxHeight = '0px';
     content.style.overflow = 'hidden';
-
-    content.addEventListener('transitionend', event => {
-      if (event.propertyName !== 'max-height') return;
-
-      if (item.classList.contains('is-open')) {
-        content.style.maxHeight = `${content.scrollHeight}px`;
-      }
-
-      refreshScrollTriggers();
-    });
+    content.style.maxHeight = '0px';
 
     if (index === 1) {
-      openItem(item);
+      item.classList.add('is-open');
+      content.style.maxHeight = `${content.scrollHeight}px`;
     }
 
     title.addEventListener('click', () => {
@@ -80,8 +59,6 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         openItem(item);
       }
-
-      refreshScrollTriggers(500);
     });
   });
 
@@ -95,7 +72,5 @@ document.addEventListener('DOMContentLoaded', () => {
         content.style.maxHeight = `${content.scrollHeight}px`;
       }
     });
-
-    refreshScrollTriggers();
   });
 });

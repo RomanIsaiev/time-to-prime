@@ -3,18 +3,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (!faqItems.length) return;
 
-  let refreshTimer;
-
-  function refreshScrollTriggers(delay = 80) {
-    if (typeof ScrollTrigger === 'undefined') return;
-
-    clearTimeout(refreshTimer);
-
-    refreshTimer = setTimeout(() => {
-      ScrollTrigger.refresh();
-    }, delay);
-  }
-
   function closeItem(item) {
     const showBox = item.querySelector('.faq-show-box');
 
@@ -49,6 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (!showBox || !questionBox) return;
 
+    showBox.style.overflow = 'hidden';
     showBox.style.height = item.classList.contains('is-active')
       ? 'auto'
       : '0px';
@@ -59,8 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (item.classList.contains('is-active')) {
         showBox.style.height = 'auto';
       }
-
-      refreshScrollTriggers();
     });
 
     questionBox.addEventListener('click', () => {
@@ -77,8 +64,6 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         openItem(item);
       }
-
-      refreshScrollTriggers(450);
     });
   });
 });

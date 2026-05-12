@@ -106,8 +106,11 @@ window.addEventListener('load', () => {
     const title = section.querySelector('.hero-title-img-box');
     const desc = section.querySelector('.hero-desc');
     const button = section.querySelector('.star-ticket-btn');
+    const buttonImg = section.querySelector('.star-ticket-btn .img-100');
 
-    const items = [startWrap, shortDesc, title, desc, button].filter(Boolean);
+    console.log(buttonImg);
+
+    const items = [startWrap, shortDesc].filter(Boolean);
 
     if (!items.length) return;
 
@@ -134,30 +137,6 @@ window.addEventListener('load', () => {
           y: 0,
         },
         '-=0.42'
-      )
-      .to(
-        title,
-        {
-          opacity: 1,
-          y: 0,
-        },
-        '-=0.42'
-      )
-      .to(
-        desc,
-        {
-          opacity: 1,
-          y: 0,
-        },
-        '-=0.4'
-      )
-      .to(
-        button,
-        {
-          opacity: 1,
-          y: 0,
-        },
-        '-=0.35'
       );
   }
 
@@ -214,6 +193,31 @@ window.addEventListener('load', () => {
       '.bonus-list',
       '.bonus-btn-wrap',
     ]);
+
+    const section = document.querySelector('.bonuses');
+
+    if (!section) return;
+
+    const icons = section.querySelectorAll('.bonus-item .item-icon-box');
+
+    if (!icons.length) return;
+
+    gsap.set(icons, {
+      opacity: 0,
+    });
+
+    gsap.to(icons, {
+      opacity: 1,
+      duration: 0.6,
+      stagger: 0.3,
+      ease: ANIM_CONFIG.ease,
+      clearProps: 'opacity',
+      scrollTrigger: {
+        trigger: section,
+        start: ANIM_CONFIG.scrollStart,
+        once: ANIM_CONFIG.once,
+      },
+    });
   }
 
   function animateReviewsSection() {

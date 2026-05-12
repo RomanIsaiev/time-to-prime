@@ -4,18 +4,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (!resultItems.length) return;
 
-  let refreshTimer;
-
-  function refreshScrollTriggers(delay = 100) {
-    if (typeof ScrollTrigger === 'undefined') return;
-
-    clearTimeout(refreshTimer);
-
-    refreshTimer = setTimeout(() => {
-      ScrollTrigger.refresh();
-    }, delay);
-  }
-
   function closeItem(item) {
     const showBox = item.querySelector('.result-show-box');
 
@@ -56,8 +44,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (!showBox || !nameBox) return;
 
-    showBox.style.height = '0px';
     showBox.style.overflow = 'hidden';
+    showBox.style.height = '0px';
 
     showBox.addEventListener('transitionend', event => {
       if (event.propertyName !== 'height') return;
@@ -65,8 +53,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (item.classList.contains('is-active')) {
         showBox.style.height = 'auto';
       }
-
-      refreshScrollTriggers();
     });
 
     nameBox.addEventListener('click', () => {
@@ -82,12 +68,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
       openItem(item);
       updatePrimeLetters(index);
-
-      refreshScrollTriggers(450);
     });
   });
 
   openItem(resultItems[0]);
   updatePrimeLetters(0);
-  refreshScrollTriggers(450);
 });
