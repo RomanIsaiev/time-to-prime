@@ -4,7 +4,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (!tariffBtns.length || !tariffItems.length) return;
 
-  const defaultActiveIndex = 2; // Headliner
+  const defaultActiveIndex = 2;
+  let refreshTimer;
+
+  function refreshScrollTriggers(delay = 120) {
+    if (typeof ScrollTrigger === 'undefined') return;
+
+    clearTimeout(refreshTimer);
+
+    refreshTimer = setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, delay);
+  }
 
   function activateTariff(index) {
     tariffBtns.forEach((btn, btnIndex) => {
@@ -14,6 +25,8 @@ document.addEventListener('DOMContentLoaded', () => {
     tariffItems.forEach((item, itemIndex) => {
       item.classList.toggle('is-active', itemIndex === index);
     });
+
+    refreshScrollTriggers(250);
   }
 
   activateTariff(defaultActiveIndex);
@@ -22,5 +35,9 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.addEventListener('click', () => {
       activateTariff(index);
     });
+  });
+
+  window.addEventListener('resize', () => {
+    refreshScrollTriggers(250);
   });
 });

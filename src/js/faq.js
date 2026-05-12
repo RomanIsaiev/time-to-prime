@@ -3,63 +3,65 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (!faqItems.length) return;
 
-  const refreshScrollTriggers = () => {
-    if (typeof window.ScrollTrigger !== 'undefined') {
-      window.ScrollTrigger.refresh();
-    }
-  };
+  let refreshTimer;
+
+  function refreshScrollTriggers(delay = 80) {
+    if (typeof ScrollTrigger === 'undefined') return;
+
+    clearTimeout(refreshTimer);
+
+    refreshTimer = setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, delay);
+  }
 
   function closeItem(item) {
     const showBox = item.querySelector('.faq-show-box');
 
+    if (!showBox || !item.classList.contains('is-active')) return;
+
     item.classList.remove('is-active');
 
-    if (showBox) {
-      showBox.style.height = showBox.scrollHeight + 'px';
+    showBox.style.height = `${showBox.scrollHeight}px`;
 
-      requestAnimationFrame(() => {
-        showBox.style.height = '0px';
-      });
-
-      showBox.addEventListener(
-        'transitionend',
-        event => {
-          if (event.propertyName === 'height') {
-            refreshScrollTriggers();
-          }
-        },
-        { once: true }
-      );
-    }
+    requestAnimationFrame(() => {
+      showBox.style.height = '0px';
+    });
   }
 
   function openItem(item) {
     const showBox = item.querySelector('.faq-show-box');
 
+    if (!showBox || item.classList.contains('is-active')) return;
+
     item.classList.add('is-active');
 
-    if (showBox) {
-      showBox.style.height = showBox.scrollHeight + 'px';
+    showBox.style.height = '0px';
 
-      showBox.addEventListener(
-        'transitionend',
-        event => {
-          if (event.propertyName === 'height') {
-            if (item.classList.contains('is-active')) {
-              showBox.style.height = 'auto';
-            }
-            refreshScrollTriggers();
-          }
-        },
-        { once: true }
-      );
-    }
+    requestAnimationFrame(() => {
+      showBox.style.height = `${showBox.scrollHeight}px`;
+    });
   }
 
   faqItems.forEach(item => {
+    const showBox = item.querySelector('.faq-show-box');
     const questionBox = item.querySelector('.faq-question-box');
 
-    if (!questionBox) return;
+    if (!showBox || !questionBox) return;
+
+    showBox.style.height = item.classList.contains('is-active')
+      ? 'auto'
+      : '0px';
+
+    showBox.addEventListener('transitionend', event => {
+      if (event.propertyName !== 'height') return;
+
+      if (item.classList.contains('is-active')) {
+        showBox.style.height = 'auto';
+      }
+
+      refreshScrollTriggers();
+    });
 
     questionBox.addEventListener('click', () => {
       const isActive = item.classList.contains('is-active');
@@ -75,6 +77,8 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         openItem(item);
       }
+
+      refreshScrollTriggers(450);
     });
   });
 });

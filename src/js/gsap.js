@@ -57,34 +57,108 @@ window.addEventListener('load', () => {
     });
   }
 
+  function refreshScrollTriggers(delay = 350) {
+    if (typeof ScrollTrigger === 'undefined') return;
+
+    clearTimeout(refreshScrollTriggers.timer);
+
+    refreshScrollTriggers.timer = setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, delay);
+  }
+
+  function watchDynamicSections() {
+    const dynamicSections = document.querySelectorAll(
+      '.program, .study-format, .result, .tariffs, .faq'
+    );
+
+    dynamicSections.forEach(section => {
+      section.addEventListener('click', () => {
+        refreshScrollTriggers(450);
+      });
+
+      section.addEventListener(
+        'transitionend',
+        event => {
+          const property = event.propertyName;
+
+          if (
+            property === 'height' ||
+            property === 'max-height' ||
+            property === 'padding' ||
+            property === 'opacity'
+          ) {
+            refreshScrollTriggers(100);
+          }
+        },
+        true
+      );
+    });
+  }
+
   function animateHeroSection() {
     const section = document.querySelector('.hero');
 
     if (!section) return;
 
-    const items = getItems(section, [
-      '.hero-start-wrap',
-      '.hero-short-desc',
-      '.hero-title-img-box',
-      '.hero-desc',
-      '.star-ticket-btn',
-    ]);
+    const startWrap = section.querySelector('.hero-start-wrap');
+    const shortDesc = section.querySelector('.hero-short-desc');
+    const title = section.querySelector('.hero-title-img-box');
+    const desc = section.querySelector('.hero-desc');
+    const button = section.querySelector('.star-ticket-btn');
+
+    const items = [startWrap, shortDesc, title, desc, button].filter(Boolean);
 
     if (!items.length) return;
 
-    gsap.set(items, {
-      autoAlpha: 0,
-      y: 18,
-    });
-
-    gsap.to(items, {
-      autoAlpha: 1,
-      y: 0,
-      duration: 0.75,
-      stagger: 0.12,
-      ease: 'power3.out',
-      clearProps: 'transform,opacity,visibility',
-    });
+    gsap
+      .timeline({
+        defaults: {
+          duration: 0.75,
+          ease: 'power3.out',
+        },
+      })
+      .set(items, {
+        visibility: 'visible',
+        opacity: 0,
+        y: 18,
+      })
+      .to(startWrap, {
+        opacity: 1,
+        y: 0,
+      })
+      .to(
+        shortDesc,
+        {
+          opacity: 1,
+          y: 0,
+        },
+        '-=0.42'
+      )
+      .to(
+        title,
+        {
+          opacity: 1,
+          y: 0,
+        },
+        '-=0.42'
+      )
+      .to(
+        desc,
+        {
+          opacity: 1,
+          y: 0,
+        },
+        '-=0.4'
+      )
+      .to(
+        button,
+        {
+          opacity: 1,
+          y: 0,
+        },
+        '-=0.35'
+      );
   }
 
   function animateStudyForYouSection() {
@@ -173,6 +247,8 @@ window.addEventListener('load', () => {
     animateReviewsSection();
     animateFaqSection();
     animateFooterSection();
+
+    watchDynamicSections();
 
     if (typeof ScrollTrigger !== 'undefined') {
       ScrollTrigger.refresh();

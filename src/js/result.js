@@ -4,38 +4,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (!resultItems.length) return;
 
+  let refreshTimer;
+
+  function refreshScrollTriggers(delay = 100) {
+    if (typeof ScrollTrigger === 'undefined') return;
+
+    clearTimeout(refreshTimer);
+
+    refreshTimer = setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, delay);
+  }
+
   function closeItem(item) {
     const showBox = item.querySelector('.result-show-box');
 
+    if (!showBox || !item.classList.contains('is-active')) return;
+
     item.classList.remove('is-active');
 
-    if (showBox) {
-      showBox.style.height = showBox.scrollHeight + 'px';
+    showBox.style.height = `${showBox.scrollHeight}px`;
 
-      requestAnimationFrame(() => {
-        showBox.style.height = '0px';
-      });
-    }
+    requestAnimationFrame(() => {
+      showBox.style.height = '0px';
+    });
   }
 
   function openItem(item) {
     const showBox = item.querySelector('.result-show-box');
 
+    if (!showBox || item.classList.contains('is-active')) return;
+
     item.classList.add('is-active');
 
-    if (showBox) {
-      showBox.style.height = showBox.scrollHeight + 'px';
+    showBox.style.height = '0px';
 
-      showBox.addEventListener(
-        'transitionend',
-        () => {
-          if (item.classList.contains('is-active')) {
-            showBox.style.height = 'auto';
-          }
-        },
-        { once: true }
-      );
-    }
+    requestAnimationFrame(() => {
+      showBox.style.height = `${showBox.scrollHeight}px`;
+    });
   }
 
   function updatePrimeLetters(activeIndex) {
@@ -48,14 +54,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const showBox = item.querySelector('.result-show-box');
     const nameBox = item.querySelector('.result-name-box');
 
-    if (showBox) {
-      showBox.style.height = '0px';
-    }
+    if (!showBox || !nameBox) return;
 
-    if (!nameBox) return;
+    showBox.style.height = '0px';
+    showBox.style.overflow = 'hidden';
+
+    showBox.addEventListener('transitionend', event => {
+      if (event.propertyName !== 'height') return;
+
+      if (item.classList.contains('is-active')) {
+        showBox.style.height = 'auto';
+      }
+
+      refreshScrollTriggers();
+    });
 
     nameBox.addEventListener('click', () => {
-      const isAlreadyActive = item.classList.contains('is-active');
+      const isActive = item.classList.contains('is-active');
+
+      if (isActive) return;
 
       resultItems.forEach(currentItem => {
         if (currentItem !== item) {
@@ -63,13 +80,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
 
-      if (!isAlreadyActive) {
-        openItem(item);
-        updatePrimeLetters(index);
-      }
+      openItem(item);
+      updatePrimeLetters(index);
+
+      refreshScrollTriggers(450);
     });
   });
 
   openItem(resultItems[0]);
   updatePrimeLetters(0);
+  refreshScrollTriggers(450);
 });

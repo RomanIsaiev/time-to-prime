@@ -133,6 +133,14 @@ button {
 
 /* HERO */
 
+.hero .hero-start-wrap,
+.hero .hero-short-desc,
+.hero .hero-title-img-box,
+.hero .hero-desc,
+.hero .star-ticket-btn {
+  visibility: hidden;
+}
+
 .hero {
   padding-top: 1.25rem;
   padding-bottom: 5rem;
