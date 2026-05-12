@@ -136,6 +136,11 @@ body {
   z-index: 3;
 }
 
+.hero [data-hero-anim] {
+  opacity: 0;
+  visibility: hidden;
+}
+
 section {
   padding: 60px 0;
 }
@@ -452,14 +457,6 @@ section {
   text-transform: lowercase;
 }
 
-.study-end-img {
-  position: absolute;
-  left: 0;
-  bottom: -2.9rem;
-  width: 100%;
-  z-index: 6;
-}
-
 .study-end-texts {
   position: absolute;
   left: 0;
@@ -477,6 +474,14 @@ section {
 }
 
 /* PROGRAM */
+
+.program-top-img {
+  position: absolute;
+  left: 0;
+  top: -5rem;
+  width: 100%;
+  z-index: 6;
+}
 
 .section {
 }
@@ -1772,6 +1777,8 @@ section {
   line-height: 105%; /* 16.8px */
   letter-spacing: -0.04rem;
   text-transform: lowercase;
+
+  opacity: 0.6;
 }
 
 .tariffs .tariff-name-box {
@@ -2529,6 +2536,7 @@ section {
   max-width: 11.25rem;
   transform: rotate(-4deg);
 
+  margin-left: 2rem;
   margin-bottom: 6.875rem;
 }
 
