@@ -93,6 +93,10 @@ button {
   cursor: pointer;
 }
 
+section {
+  padding: 60px 0;
+}
+
 /* HEADER */
 
 .header {
@@ -156,12 +160,9 @@ button {
   visibility: hidden;
 }
 
-section {
-  padding: 60px 0;
-}
-
 .container {
 }
+
 .hero-start-wrap {
   display: flex;
   gap: 2.5rem;
@@ -258,11 +259,15 @@ section {
   display: inline-flex;
   position: relative;
   width: 15.4375rem;
-  height: 7.3125rem;
+  height: 7.375rem;
   transform-origin: center center;
   animation: sway 4.5s ease-in-out infinite;
   margin-left: -2rem;
   z-index: 2;
+}
+
+.star-ticket-btn img {
+  object-fit: contain;
 }
 
 .star-ticket-btn p {
@@ -385,7 +390,7 @@ section {
   font-size: 1.875rem;
   font-weight: 500;
   margin-top: -2rem;
-  margin-left: 3.8rem;
+  margin-left: 4.3rem;
 }
 
 .study-for-you .subtitle span {
