@@ -83,6 +83,10 @@ body {
   background: var(--black, #262626);
 }
 
+button {
+  cursor: pointer;
+}
+
 /* HEADER */
 
 .header {
@@ -2664,6 +2668,8 @@ section {
   position: fixed;
   inset: 0;
   z-index: 999;
+  left: 50%;
+  transform: translate(-50%);
 
   opacity: 0;
   visibility: hidden;
