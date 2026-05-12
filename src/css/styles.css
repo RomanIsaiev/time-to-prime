@@ -2675,6 +2675,7 @@ section {
   visibility: hidden;
   pointer-events: none;
   max-width: 479px;
+  width: 100%;
   transition:
     opacity 0.3s ease,
     visibility 0.3s ease;
