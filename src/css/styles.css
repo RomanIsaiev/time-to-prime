@@ -473,6 +473,14 @@ section {
   z-index: 4;
 }
 
+.study-end-img {
+  position: absolute;
+  left: 0;
+  bottom: -2.9rem;
+  width: 100%;
+  z-index: 6;
+}
+
 /* PROGRAM */
 
 .program-top-img {
