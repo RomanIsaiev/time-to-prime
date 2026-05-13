@@ -3,8 +3,8 @@ const swiper = new Swiper('.lectors-swiper', {
   spaceBetween: 20,
   slidesPerView: 'auto',
   navigation: {
-    nextEl: '.swiper-button-next',
-    prevEl: '.swiper-button-prev',
+    nextEl: '.lectors-button-next',
+    prevEl: '.lectors-button-prev',
   },
 });
 
