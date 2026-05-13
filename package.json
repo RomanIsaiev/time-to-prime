@@ -9,7 +9,11 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "imagemin-avif": "^0.1.6",
+    "imagemin-webp": "^8.0.0",
+    "sharp": "^0.34.5",
     "vite": "^5.2.0",
+    "vite-plugin-image-optimizer": "^2.0.3",
     "vite-plugin-imagemin": "^0.6.1"
   },
   "dependencies": {
