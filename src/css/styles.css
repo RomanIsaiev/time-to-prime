@@ -1628,7 +1628,7 @@ section {
 
 /* swiper */
 
-.lectors .swiper {
+.lectors-swiper {
   width: 100%;
   cursor: grab;
 }
