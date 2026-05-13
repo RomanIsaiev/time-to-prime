@@ -1975,7 +1975,6 @@ section {
   font-weight: 500;
   line-height: 120%; /* 19.2px */
   letter-spacing: -0.02rem;
-  text-transform: lowercase;
 }
 
 .tariffs .inside-text {
