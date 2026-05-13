@@ -215,36 +215,74 @@ window.addEventListener('load', () => {
   }
 
   function animateBonusesSection() {
-    animateBlocks('.bonuses', [
-      '.bonuses-title-wrap',
-      '.bonus-list',
-      '.bonus-btn-wrap',
-    ]);
-
     const section = document.querySelector('.bonuses');
 
     if (!section) return;
 
-    const icons = section.querySelectorAll('.bonus-item .item-icon-box');
+    const title = section.querySelector('.bonuses-title-wrap');
+    const cards = section.querySelectorAll('.bonus-item');
+    const button = section.querySelector('.bonus-btn-wrap');
 
-    if (!icons.length) return;
+    if (title) {
+      gsap.set(title, {
+        opacity: 0,
+        y: ANIM_CONFIG.y,
+      });
 
-    gsap.set(icons, { opacity: 0 });
+      gsap.to(title, {
+        opacity: 1,
+        y: 0,
+        duration: ANIM_CONFIG.duration,
+        ease: ANIM_CONFIG.ease,
+        clearProps: 'transform,opacity',
+        scrollTrigger: {
+          trigger: title,
+          start: ANIM_CONFIG.scrollStart,
+          once: ANIM_CONFIG.once,
+        },
+      });
+    }
 
-    gsap.to(icons, {
-      opacity: 1,
-      duration: 0.6,
-      stagger: 0.3,
-      ease: ANIM_CONFIG.ease,
-      clearProps: 'opacity',
-      scrollTrigger: {
-        trigger: section,
-        start: ANIM_CONFIG.scrollStart,
-        once: ANIM_CONFIG.once,
-      },
+    cards.forEach(card => {
+      gsap.set(card, {
+        opacity: 0,
+        y: 18,
+      });
+
+      gsap.to(card, {
+        opacity: 1,
+        y: 0,
+        duration: 0.7,
+        ease: ANIM_CONFIG.ease,
+        clearProps: 'transform,opacity',
+        scrollTrigger: {
+          trigger: card,
+          start: 'top 70%',
+          once: true,
+        },
+      });
     });
-  }
 
+    if (button) {
+      gsap.set(button, {
+        opacity: 0,
+        y: ANIM_CONFIG.y,
+      });
+
+      gsap.to(button, {
+        opacity: 1,
+        y: 0,
+        duration: ANIM_CONFIG.duration,
+        ease: ANIM_CONFIG.ease,
+        clearProps: 'transform,opacity',
+        scrollTrigger: {
+          trigger: button,
+          start: 'top 80%',
+          once: ANIM_CONFIG.once,
+        },
+      });
+    }
+  }
   function animateReviewsSection() {
     animateBlocks('.reviews', ['.reviews-title-wrap', '.swiper-box']);
   }
