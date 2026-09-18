@@ -891,11 +891,11 @@ section {
 
 /* PROGRAM WORK WITH JS CODE */
 
-/* .item-show-box {
+.item-show-box {
   max-height: 0;
   overflow: hidden;
   transition: all 0.45s ease;
-} */
+}
 
 .program-plus {
   transition:
@@ -914,7 +914,6 @@ section {
 
 .program-item.is-open {
   background-color: #fbfbfb;
-  border: 1px solid #fea6c3;
 }
 
 .program-item.is-open .item-icon-box {
