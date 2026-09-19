@@ -482,7 +482,7 @@ section {
 }
 
 .study-for-you .inside-item-text {
-  color: var(--black, #262626);
+  /* color: var(--black, #262626); */
   font-family: Gilroy;
   font-size: 16px;
   font-style: normal;
@@ -1916,8 +1916,8 @@ section {
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .tariffs .tariff-control-btn {
-    padding: 0.5rem;
-    padding-bottom: 0.3rem;
+    /* padding: 0.5rem; */
+    /* padding-bottom: 0.3rem; */
   }
 }
 
@@ -2353,7 +2353,7 @@ section {
   line-height: 104%; /* 19.76px */
   letter-spacing: -0.0238rem;
 
-  margin-bottom: 0.5rem;
+  /* margin-bottom: 0.5rem; */
 
   text-wrap-style: balance;
 }
@@ -2748,7 +2748,7 @@ section {
 .footer .letter-text-box {
   position: absolute;
   left: 50%;
-  top: 13.5rem;
+  top: 12.3rem;
   width: 19rem;
 
   transform: translate(-50%) rotate(7deg);
