@@ -40,10 +40,10 @@ document.addEventListener('DOMContentLoaded', () => {
     content.style.overflow = 'hidden';
     content.style.maxHeight = '0px';
 
-    if (index === 1) {
-      item.classList.add('is-open');
-      content.style.maxHeight = `${content.scrollHeight}px`;
-    }
+    // if (index === 1) {
+    //   item.classList.add('is-open');
+    //   content.style.maxHeight = `${content.scrollHeight}px`;
+    // }
 
     title.addEventListener('click', () => {
       const isOpen = item.classList.contains('is-open');
