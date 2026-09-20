@@ -69,12 +69,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!showBox || !nameBox) return;
 
     showBox.style.overflow = 'hidden';
-
-    if (item.classList.contains('is-active')) {
-      showBox.style.height = 'auto';
-    } else {
-      showBox.style.height = '0px';
-    }
+    showBox.style.height = '0px';
+    item.classList.remove('is-active');
 
     showBox.addEventListener('transitionend', event => {
       if (event.propertyName !== 'height') return;
@@ -94,4 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
       toggleItem(index);
     });
   });
+
+  openItem(resultItems[0]);
+  updatePrimeLetters(0);
 });
