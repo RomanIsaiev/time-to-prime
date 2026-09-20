@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const soldOutStatus = {
     solo: false,
     hollywood: false,
-    prime: false,
+    prime: true,
   };
 
   const tariffItems = document.querySelectorAll('.tariff-item');
