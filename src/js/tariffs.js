@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (!tariffBtns.length || !tariffItems.length) return;
 
-  const defaultActiveIndex = 2;
+  const defaultActiveIndex = 1;
   let refreshTimer;
 
   function refreshScrollTriggers(delay = 120) {

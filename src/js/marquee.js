@@ -1,6 +1,6 @@
 new InfiniteMarquee({
   element: '.marquee-container',
-  speed: 40000,
+  speed: 60000,
   smoothEdges: false,
   direction: 'left',
   fullContainer: false,
