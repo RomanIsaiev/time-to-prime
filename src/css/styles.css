@@ -269,6 +269,8 @@ section {
 
 .star-ticket-btn img {
   object-fit: contain;
+  width: 15.4375rem;
+  height: 7.375rem;
 }
 
 .star-ticket-btn p {
