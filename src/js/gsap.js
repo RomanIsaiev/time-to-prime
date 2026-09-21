@@ -1,328 +1,378 @@
-window.addEventListener('load', () => {
+document.addEventListener('DOMContentLoaded', () => {
   if (typeof gsap === 'undefined') {
     console.warn('GSAP is not loaded');
     return;
   }
 
-  if (typeof ScrollTrigger !== 'undefined') {
-    gsap.registerPlugin(ScrollTrigger);
+  if (typeof ScrollTrigger === 'undefined') {
+    console.warn('ScrollTrigger is not loaded');
+    return;
   }
 
-  const ANIM_CONFIG = {
-    scrollStart: 'top 65%',
-    y: 22,
-    duration: 0.8,
-    stagger: 0.14,
-    ease: 'power3.out',
-    once: true,
+  gsap.registerPlugin(ScrollTrigger);
+
+  ScrollTrigger.config({
+    ignoreMobileResize: true,
+  });
+
+  const CONFIG = {
+    start: 'top 88%',
+    y: 30,
+    duration: 0.75,
+    ease: 'power2.out',
   };
 
-  // --- Scroll state ---
-  let refreshTimer;
-  let scrollTimer;
-  let isScrolling = false;
-  let pendingRefresh = false;
+  // -------------------------
+  // HELPERS
+  // -------------------------
 
-  function scheduleRefresh(delay) {
-    clearTimeout(refreshTimer);
-    refreshTimer = setTimeout(() => {
-      if (typeof ScrollTrigger === 'undefined') return;
-      ScrollTrigger.refresh();
-      pendingRefresh = false;
-    }, delay);
-  }
-
-  function refreshScrollTriggers(delay = 350) {
-    if (typeof ScrollTrigger === 'undefined') return;
-
-    pendingRefresh = true;
-
-    if (!isScrolling) {
-      scheduleRefresh(delay);
-    }
-  }
-
-  function watchScrollState() {
-    window.addEventListener(
-      'scroll',
-      () => {
-        isScrolling = true;
-        clearTimeout(scrollTimer);
-
-        scrollTimer = setTimeout(() => {
-          isScrolling = false;
-
-          if (pendingRefresh) {
-            scheduleRefresh(100);
-          }
-        }, 150);
-      },
-      { passive: true }
-    );
-  }
-
-  // --- Helpers ---
-  function getItems(section, selectors) {
-    return selectors
-      .map(selector => section.querySelector(selector))
-      .filter(Boolean);
-  }
-
-  function animateBlocks(sectionSelector, selectors, options = {}) {
-    const section = document.querySelector(sectionSelector);
-
-    if (!section) return;
-
-    const items = getItems(section, selectors);
-
-    if (!items.length) return;
-
+  function fadeIn(selector, options = {}) {
     const config = {
-      ...ANIM_CONFIG,
+      ...CONFIG,
       ...options,
     };
 
-    gsap.set(items, {
+    gsap.utils.toArray(selector).forEach(el => {
+      gsap.from(el, {
+        scrollTrigger: {
+          trigger: el,
+          start: config.start,
+          toggleActions: 'play none none none',
+        },
+        opacity: 0,
+        y: config.y,
+        duration: config.duration,
+        ease: config.ease,
+      });
+    });
+  }
+
+  function fadeInGroup(selector, options = {}) {
+    const elements = gsap.utils.toArray(selector);
+
+    if (!elements.length) return;
+
+    const config = {
+      ...CONFIG,
+      stagger: 0.08,
+      ...options,
+    };
+
+    gsap.from(elements, {
+      scrollTrigger: {
+        trigger: elements[0],
+        start: config.start,
+        toggleActions: 'play none none none',
+      },
       opacity: 0,
       y: config.y,
-    });
-
-    gsap.to(items, {
-      opacity: 1,
-      y: 0,
       duration: config.duration,
       stagger: config.stagger,
       ease: config.ease,
-      clearProps: 'transform,opacity',
-      scrollTrigger: {
-        trigger: section,
-        start: config.scrollStart,
-        once: config.once,
+    });
+  }
+
+  // -------------------------
+  // HERO
+  // -------------------------
+
+  function animateHero() {
+    const startWrap = document.querySelector('.hero-start-wrap');
+    const shortDesc = document.querySelector('.hero-short-desc');
+
+    const elements = [startWrap, shortDesc].filter(Boolean);
+
+    if (!elements.length) return;
+
+    const tl = gsap.timeline({
+      defaults: {
+        duration: 0.8,
+        ease: 'power3.out',
       },
     });
-  }
 
-  // --- Dynamic sections (accordions) ---
-  function watchDynamicSections() {
-    const dynamicSections = document.querySelectorAll(
-      '.program, .study-format, .result, .tariffs, .faq'
-    );
-
-    const relevantProps = new Set([
-      'height',
-      'max-height',
-      'padding',
-      'opacity',
-    ]);
-
-    dynamicSections.forEach(section => {
-      section.addEventListener(
-        'transitionend',
-        event => {
-          if (relevantProps.has(event.propertyName)) {
-            refreshScrollTriggers(200);
-          }
-        },
-        true
-      );
+    tl.set(elements, {
+      visibility: 'visible',
+      opacity: 0,
+      y: 24,
     });
-  }
 
-  // --- Sections ---
-  function animateHeroSection() {
-    const section = document.querySelector('.hero');
-
-    if (!section) return;
-
-    const startWrap = section.querySelector('.hero-start-wrap');
-    const shortDesc = section.querySelector('.hero-short-desc');
-
-    const items = [startWrap, shortDesc].filter(Boolean);
-
-    if (!items.length) return;
-
-    gsap
-      .timeline({
-        defaults: {
-          duration: 0.75,
-          ease: 'power3.out',
-        },
-      })
-      .set(items, {
-        visibility: 'visible',
-        opacity: 0,
-        y: 18,
-      })
-      .to(startWrap, {
+    if (startWrap) {
+      tl.to(startWrap, {
         opacity: 1,
         y: 0,
-      })
-      .to(
+      });
+    }
+
+    if (shortDesc) {
+      tl.to(
         shortDesc,
         {
           opacity: 1,
           y: 0,
         },
-        '-=0.42'
+        '-=0.45'
       );
-  }
-
-  function animateStudyForYouSection() {
-    animateBlocks('.study-for-you', ['.title-wrap', '.study-list']);
-  }
-
-  function animateProgramSection() {
-    animateBlocks('.program', [
-      '.program-title-wrap',
-      '.program-decor-img',
-      '.program-list',
-      '.want-btn',
-    ]);
-  }
-
-  function animateStudyFormatSection() {
-    animateBlocks('.study-format', ['.format-title-wrap', '.format-wrapper']);
-  }
-
-  function animateResultSection() {
-    animateBlocks('.result', [
-      '.result-title-wrap',
-      '.result-text-box',
-      '.result-wrapper',
-      '.want-btn',
-    ]);
-  }
-
-  function animateAboutAuthorSection() {
-    animateBlocks('.about-author', [
-      '.author-title-wrap',
-      '.author-wrapper',
-      '.author-stars-wrap',
-      '.author-brands-wrap',
-    ]);
-  }
-
-  function animateLectorsSection() {
-    animateBlocks('.lectors', ['.lectors-title-wrap', '.swiper-box']);
-  }
-
-  function animateTariffsSection() {
-    animateBlocks('.tariffs', [
-      '.tariff-title-wrap',
-      '.tariff-desc-box',
-      '.tariff-wrapper',
-    ]);
-  }
-
-  function animateBonusesSection() {
-    const section = document.querySelector('.bonuses');
-
-    if (!section) return;
-
-    const title = section.querySelector('.bonuses-title-wrap');
-    const cards = section.querySelectorAll('.bonus-item');
-    const button = section.querySelector('.bonus-btn-wrap');
-
-    if (title) {
-      gsap.set(title, {
-        opacity: 0,
-        y: ANIM_CONFIG.y,
-      });
-
-      gsap.to(title, {
-        opacity: 1,
-        y: 0,
-        duration: ANIM_CONFIG.duration,
-        ease: ANIM_CONFIG.ease,
-        clearProps: 'transform,opacity',
-        scrollTrigger: {
-          trigger: title,
-          start: ANIM_CONFIG.scrollStart,
-          once: ANIM_CONFIG.once,
-        },
-      });
     }
+  }
 
-    cards.forEach(card => {
-      gsap.set(card, {
-        opacity: 0,
-        y: 18,
-      });
+  // -------------------------
+  // STUDY FOR YOU
+  // -------------------------
 
-      gsap.to(card, {
-        opacity: 1,
-        y: 0,
-        duration: 0.7,
-        ease: ANIM_CONFIG.ease,
-        clearProps: 'transform,opacity',
-        scrollTrigger: {
-          trigger: card,
-          start: 'top 70%',
-          once: true,
-        },
-      });
+  function animateStudyForYou() {
+    fadeIn('.study-for-you .title-wrap');
+
+    fadeIn('.study-for-you .study-item', {
+      y: 28,
+      duration: 0.7,
+    });
+  }
+
+  // -------------------------
+  // PROGRAM
+  // -------------------------
+
+  function animateProgram() {
+    fadeIn('.program .program-title-wrap');
+
+    fadeIn('.program .program-decor-img', {
+      y: 20,
+      duration: 0.65,
     });
 
-    if (button) {
-      gsap.set(button, {
-        opacity: 0,
-        y: ANIM_CONFIG.y,
-      });
+    fadeIn('.program .program-week', {
+      y: 28,
+      duration: 0.7,
+    });
 
-      gsap.to(button, {
-        opacity: 1,
-        y: 0,
-        duration: ANIM_CONFIG.duration,
-        ease: ANIM_CONFIG.ease,
-        clearProps: 'transform,opacity',
-        scrollTrigger: {
-          trigger: button,
-          start: 'top 80%',
-          once: ANIM_CONFIG.once,
-        },
-      });
-    }
-  }
-  function animateReviewsSection() {
-    animateBlocks('.reviews', ['.reviews-title-wrap', '.swiper-box']);
+    fadeIn('.program .want-btn', {
+      y: 20,
+      duration: 0.65,
+      start: 'top 90%',
+    });
   }
 
-  function animateFaqSection() {
-    animateBlocks('.faq', ['.faq-title-wrap', '.faq-desc', '.faq-list']);
+  // -------------------------
+  // STUDY FORMAT
+  // -------------------------
+
+  function animateStudyFormat() {
+    fadeIn('.study-format .format-title-wrap');
+
+    fadeIn('.study-format .format-item', {
+      y: 26,
+      duration: 0.7,
+    });
+
+    fadeIn('.study-format .new-format-item', {
+      y: 26,
+      duration: 0.7,
+    });
   }
 
-  function animateFooterSection() {
-    animateBlocks('.footer', [
-      '.support-letter-box',
-      '.support-link',
-      '.footer-wrapper',
-      '.disign-creator',
-      '.footer-logo',
-    ]);
+  // -------------------------
+  // RESULT
+  // -------------------------
+
+  function animateResult() {
+    fadeIn('.result .result-title-wrap');
+
+    fadeIn('.result .result-text-box', {
+      y: 24,
+    });
+
+    fadeIn('.result .result-prime-letters', {
+      y: 20,
+    });
+
+    fadeIn('.result .result-item', {
+      y: 28,
+      duration: 0.7,
+    });
+
+    fadeIn('.result .want-btn', {
+      y: 20,
+      start: 'top 90%',
+    });
   }
 
-  // --- Init ---
+  // -------------------------
+  // ABOUT AUTHOR
+  // -------------------------
+
+  function animateAboutAuthor() {
+    fadeIn('.about-author .author-title-wrap');
+
+    fadeIn('.about-author .author-name', {
+      y: 24,
+    });
+
+    fadeIn('.about-author .author-item', {
+      y: 22,
+      duration: 0.65,
+    });
+
+    fadeIn('.about-author .author-stories', {
+      y: 26,
+    });
+
+    fadeIn('.about-author .author-stars-wrap', {
+      y: 26,
+    });
+
+    fadeIn('.about-author .author-brands-wrap', {
+      y: 26,
+    });
+  }
+
+  // -------------------------
+  // LECTORS
+  // -------------------------
+
+  function animateLectors() {
+    fadeIn('.lectors .lectors-title-wrap');
+
+    fadeIn('.lectors .swiper-slide', {
+      y: 28,
+      duration: 0.7,
+    });
+
+    fadeIn('.lectors .swiper-btns-box', {
+      y: 18,
+      duration: 0.6,
+      start: 'top 92%',
+    });
+  }
+
+  // -------------------------
+  // TARIFFS
+  // -------------------------
+
+  function animateTariffs() {
+    fadeIn('.tariffs .tariff-title-wrap');
+
+    fadeIn('.tariffs .tariff-desc-box', {
+      y: 24,
+    });
+
+    fadeIn('.tariffs .tariff-control-box', {
+      y: 20,
+    });
+
+    fadeIn('.tariffs .tariff-item', {
+      y: 28,
+      duration: 0.7,
+    });
+  }
+
+  // -------------------------
+  // BONUSES
+  // -------------------------
+
+  function animateBonuses() {
+    fadeIn('.bonuses .bonuses-title-wrap');
+
+    fadeIn('.bonuses .bonus-item', {
+      y: 28,
+      duration: 0.7,
+    });
+
+    fadeIn('.bonuses .bonus-btn-wrap', {
+      y: 20,
+      start: 'top 90%',
+    });
+  }
+
+  // -------------------------
+  // REVIEWS
+  // -------------------------
+
+  function animateReviews() {
+    fadeIn('.reviews .reviews-title-wrap');
+
+    fadeIn('.reviews .swiper-slide', {
+      y: 28,
+      duration: 0.7,
+    });
+
+    fadeIn('.reviews .swiper-btns-box', {
+      y: 18,
+      duration: 0.6,
+      start: 'top 92%',
+    });
+  }
+
+  // -------------------------
+  // FAQ
+  // -------------------------
+
+  function animateFaq() {
+    fadeIn('.faq .faq-title-wrap');
+
+    fadeIn('.faq .faq-desc', {
+      y: 24,
+    });
+
+    fadeIn('.faq .faq-item', {
+      y: 24,
+      duration: 0.65,
+    });
+  }
+
+  // -------------------------
+  // FOOTER
+  // -------------------------
+
+  function animateFooter() {
+    fadeIn('.footer .support-letter-box');
+
+    fadeIn('.footer .support-link', {
+      y: 18,
+      duration: 0.6,
+    });
+
+    fadeIn('.footer .footer-wrapper', {
+      y: 26,
+    });
+
+    fadeIn('.footer .disign-creator', {
+      y: 18,
+      duration: 0.6,
+    });
+
+    fadeIn('.footer .footer-logo', {
+      y: 22,
+      duration: 0.65,
+    });
+  }
+
+  // -------------------------
+  // INIT
+  // -------------------------
+
   function initAnimations() {
-    animateHeroSection();
-    animateStudyForYouSection();
-    animateProgramSection();
-    animateStudyFormatSection();
-    animateResultSection();
-    animateAboutAuthorSection();
-    animateLectorsSection();
-    animateTariffsSection();
-    animateBonusesSection();
-    animateReviewsSection();
-    animateFaqSection();
-    animateFooterSection();
-
-    watchScrollState();
-    watchDynamicSections();
-
-    if (typeof ScrollTrigger !== 'undefined') {
-      ScrollTrigger.refresh();
-    }
+    animateHero();
+    animateStudyForYou();
+    animateProgram();
+    animateStudyFormat();
+    animateResult();
+    animateAboutAuthor();
+    animateLectors();
+    animateTariffs();
+    animateBonuses();
+    animateReviews();
+    animateFaq();
+    animateFooter();
   }
 
   initAnimations();
+
+  window.addEventListener(
+    'load',
+    () => {
+      ScrollTrigger.refresh();
+    },
+    { once: true }
+  );
 });
