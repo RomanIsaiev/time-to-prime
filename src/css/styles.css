@@ -2356,12 +2356,12 @@ section {
 }
 
 .bonuses .pink-accent {
-  margin-top: -1.08rem;
-  margin-right: -0.2rem;
+  margin-top: -1rem;
+  margin-right: 0.8rem;
   text-align: right;
   color: var(--pink, #fea6c3);
   font-family: Ouvality;
-  font-size: 3.5rem;
+  font-size: 3.3rem;
   font-style: normal;
   font-weight: 400;
   line-height: 105%; /* 58.8px */
