@@ -86,21 +86,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const tl = gsap.timeline({
       defaults: {
-        duration: 0.8,
-        ease: 'power3.out',
+        duration: 0.65,
+        ease: 'power2.out',
       },
     });
 
     tl.set(elements, {
       visibility: 'visible',
       opacity: 0,
-      y: 24,
     });
 
     if (startWrap) {
       tl.to(startWrap, {
         opacity: 1,
-        y: 0,
       });
     }
 
@@ -109,9 +107,8 @@ document.addEventListener('DOMContentLoaded', () => {
         shortDesc,
         {
           opacity: 1,
-          y: 0,
         },
-        '-=0.45'
+        '-=0.35'
       );
     }
   }

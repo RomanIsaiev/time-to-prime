@@ -206,6 +206,8 @@ section {
   position: relative;
   margin-top: -0.9rem;
   margin-bottom: 0.625rem;
+  height: 9rem;
+  width: 15.125rem;
 }
 
 .hero-desc {
@@ -234,6 +236,7 @@ section {
 
 .hero-arrow {
   width: 6.6875rem;
+  height: 7.5rem;
   transform: rotate(-13deg);
   margin-left: 4.375rem;
   margin-bottom: 1rem;
@@ -307,6 +310,7 @@ section {
 .hero-author {
   position: absolute;
   width: 25.125rem;
+
   height: 45.9375rem;
   height: auto;
   right: -0.2rem;
