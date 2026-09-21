@@ -2670,12 +2670,13 @@ section {
 .faq .question {
   color: var(--black, #262626);
   font-family: Gilroy;
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   font-style: normal;
   font-weight: 600;
   line-height: 95%; /* 22.8px */
   letter-spacing: -0.06rem;
-  max-width: 16rem;
+  max-width: 14rem;
+  text-wrap-style: balance;
 }
 
 .faq .item-icon-box {

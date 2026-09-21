@@ -38,9 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!showBox || !questionBox) return;
 
     showBox.style.overflow = 'hidden';
-    showBox.style.height = item.classList.contains('is-active')
-      ? 'auto'
-      : '0px';
+    showBox.style.height = '0px';
+    item.classList.remove('is-active');
 
     showBox.addEventListener('transitionend', event => {
       if (event.propertyName !== 'height') return;
@@ -66,4 +65,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
+
+  openItem(faqItems[0]);
 });
