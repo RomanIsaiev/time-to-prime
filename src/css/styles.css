@@ -286,6 +286,15 @@ section {
   letter-spacing: -0.015rem;
 }
 
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .star-ticket-btn p {
+    position: absolute;
+    top: 50%;
+    left: 47%;
+    transform: translate(-50%, -50%);
+  }
+}
+
 .bg-star {
   position: absolute;
   left: 0;
