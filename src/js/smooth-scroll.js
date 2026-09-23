@@ -1,27 +1,21 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const links = document.querySelectorAll('a[href^="#"]');
-  const header = document.querySelector('.header');
+gsap.registerPlugin(ScrollToPlugin);
 
-  links.forEach(link => {
-    link.addEventListener('click', event => {
-      const href = link.getAttribute('href');
+document.querySelectorAll('a[href^="#"]').forEach(link => {
+  link.addEventListener('click', e => {
+    const href = link.getAttribute('href');
 
-      if (!href || href === '#') return;
+    if (!href || href === '#') return;
 
-      const target = document.querySelector(href);
+    const target = document.querySelector(href);
 
-      if (!target) return;
+    if (!target) return;
 
-      event.preventDefault();
+    e.preventDefault();
 
-      const headerHeight = header ? header.offsetHeight : 0;
-      const targetPosition =
-        target.getBoundingClientRect().top + window.pageYOffset - headerHeight;
-
-      window.scrollTo({
-        top: targetPosition,
-        behavior: 'smooth',
-      });
+    gsap.to(window, {
+      duration: 1.2,
+      scrollTo: target,
+      ease: 'power2.inOut',
     });
   });
 });

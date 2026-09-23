@@ -8,11 +8,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (!content || !item.classList.contains('is-open')) return;
 
-    item.classList.remove('is-open');
-
     content.style.maxHeight = `${content.scrollHeight}px`;
 
     requestAnimationFrame(() => {
+      item.classList.remove('is-open');
       content.style.maxHeight = '0px';
     });
   }
@@ -24,26 +23,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     item.classList.add('is-open');
 
-    content.style.maxHeight = '0px';
-
     requestAnimationFrame(() => {
       content.style.maxHeight = `${content.scrollHeight}px`;
     });
   }
 
-  programItems.forEach((item, index) => {
+  programItems.forEach(item => {
     const title = item.querySelector('.item-title-box');
     const content = item.querySelector('.item-show-box');
 
     if (!title || !content) return;
 
-    content.style.overflow = 'hidden';
     content.style.maxHeight = '0px';
-
-    // if (index === 1) {
-    //   item.classList.add('is-open');
-    //   content.style.maxHeight = `${content.scrollHeight}px`;
-    // }
 
     title.addEventListener('click', () => {
       const isOpen = item.classList.contains('is-open');

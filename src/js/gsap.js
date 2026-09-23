@@ -1,11 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
-  if (typeof gsap === 'undefined') {
-    console.warn('GSAP is not loaded');
-    return;
-  }
-
-  if (typeof ScrollTrigger === 'undefined') {
-    console.warn('ScrollTrigger is not loaded');
+  if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+    console.warn('GSAP or ScrollTrigger is not loaded');
     return;
   }
 
@@ -13,363 +8,326 @@ document.addEventListener('DOMContentLoaded', () => {
 
   ScrollTrigger.config({
     ignoreMobileResize: true,
+    limitCallbacks: true,
   });
 
-  const CONFIG = {
+  const DEFAULTS = {
     start: 'top 88%',
-    y: 30,
-    duration: 0.75,
+    y: 24,
+    duration: 0.65,
     ease: 'power2.out',
   };
 
-  // -------------------------
-  // HELPERS
-  // -------------------------
+  // ---------------------------------
+  // SINGLE ELEMENT / INDIVIDUAL ITEMS
+  // ---------------------------------
 
-  function fadeIn(selector, options = {}) {
+  function reveal(selector, options = {}) {
     const config = {
-      ...CONFIG,
+      ...DEFAULTS,
       ...options,
     };
 
     gsap.utils.toArray(selector).forEach(el => {
       gsap.from(el, {
-        scrollTrigger: {
-          trigger: el,
-          start: config.start,
-          toggleActions: 'play none none none',
-        },
         opacity: 0,
         y: config.y,
         duration: config.duration,
         ease: config.ease,
+        clearProps: 'transform',
+
+        scrollTrigger: {
+          trigger: el,
+          start: config.start,
+          once: true,
+        },
       });
     });
   }
 
-  function fadeInGroup(selector, options = {}) {
+  // ---------------------------------
+  // GROUP
+  // Один ScrollTrigger на всю группу
+  // ---------------------------------
+
+  function revealGroup(selector, options = {}) {
     const elements = gsap.utils.toArray(selector);
 
     if (!elements.length) return;
 
     const config = {
-      ...CONFIG,
-      stagger: 0.08,
+      ...DEFAULTS,
+      stagger: 0.07,
       ...options,
     };
 
     gsap.from(elements, {
-      scrollTrigger: {
-        trigger: elements[0],
-        start: config.start,
-        toggleActions: 'play none none none',
-      },
       opacity: 0,
       y: config.y,
       duration: config.duration,
       stagger: config.stagger,
       ease: config.ease,
+      clearProps: 'transform',
+
+      scrollTrigger: {
+        trigger: elements[0],
+        start: config.start,
+        once: true,
+      },
     });
   }
 
-  // -------------------------
+  // ---------------------------------
   // HERO
-  // -------------------------
+  // Без ScrollTrigger вообще
+  // ---------------------------------
 
   function animateHero() {
-    const startWrap = document.querySelector('.hero-start-wrap');
-    const shortDesc = document.querySelector('.hero-short-desc');
-
-    const elements = [startWrap, shortDesc].filter(Boolean);
+    const elements = [
+      document.querySelector('.hero-start-wrap'),
+      document.querySelector('.hero-short-desc'),
+    ].filter(Boolean);
 
     if (!elements.length) return;
 
-    const tl = gsap.timeline({
-      defaults: {
-        duration: 0.65,
-        ease: 'power2.out',
-      },
-    });
-
-    tl.set(elements, {
+    gsap.set(elements, {
       visibility: 'visible',
       opacity: 0,
     });
 
-    if (startWrap) {
-      tl.to(startWrap, {
-        opacity: 1,
-      });
-    }
-
-    if (shortDesc) {
-      tl.to(
-        shortDesc,
-        {
-          opacity: 1,
-        },
-        '-=0.35'
-      );
-    }
+    gsap.to(elements, {
+      opacity: 1,
+      duration: 0.65,
+      stagger: 0.15,
+      ease: 'power2.out',
+    });
   }
 
-  // -------------------------
+  // ---------------------------------
   // STUDY FOR YOU
-  // -------------------------
+  // ---------------------------------
 
   function animateStudyForYou() {
-    fadeIn('.study-for-you .title-wrap');
+    reveal('.study-for-you .title-wrap');
 
-    fadeIn('.study-for-you .study-item', {
+    revealGroup('.study-for-you .study-item', {
       y: 28,
       duration: 0.7,
     });
   }
 
-  // -------------------------
+  // ---------------------------------
   // PROGRAM
-  // -------------------------
+  // ---------------------------------
 
   function animateProgram() {
-    fadeIn('.program .program-title-wrap');
+    reveal('.program .program-title-wrap');
 
-    fadeIn('.program .program-decor-img', {
+    reveal('.program .program-decor-img', {
       y: 20,
-      duration: 0.65,
     });
 
-    fadeIn('.program .program-week', {
+    // Оставляем недели отдельно,
+    // потому что секция очень длинная.
+    reveal('.program .program-week', {
       y: 28,
       duration: 0.7,
     });
 
-    fadeIn('.program .want-btn', {
+    reveal('.program .want-btn', {
       y: 20,
-      duration: 0.65,
       start: 'top 90%',
     });
   }
 
-  // -------------------------
+  // ---------------------------------
   // STUDY FORMAT
-  // -------------------------
+  // ---------------------------------
 
   function animateStudyFormat() {
-    fadeIn('.study-format .format-title-wrap');
+    reveal('.study-format .format-title-wrap');
 
-    fadeIn('.study-format .format-item', {
+    revealGroup('.study-format .format-item', {
       y: 26,
       duration: 0.7,
     });
 
-    fadeIn('.study-format .new-format-item', {
+    revealGroup('.study-format .new-format-item', {
       y: 26,
       duration: 0.7,
     });
   }
 
-  // -------------------------
+  // ---------------------------------
   // RESULT
-  // -------------------------
+  // ---------------------------------
 
   function animateResult() {
-    fadeIn('.result .result-title-wrap');
+    reveal('.result .result-title-wrap');
 
-    fadeIn('.result .result-text-box', {
-      y: 24,
-    });
-
-    fadeIn('.result .result-prime-letters', {
+    reveal('.result .result-text-box');
+    reveal('.result .result-prime-letters', {
       y: 20,
     });
 
-    fadeIn('.result .result-item', {
+    revealGroup('.result .result-item', {
       y: 28,
       duration: 0.7,
     });
 
-    fadeIn('.result .want-btn', {
+    reveal('.result .want-btn', {
       y: 20,
       start: 'top 90%',
     });
   }
 
-  // -------------------------
+  // ---------------------------------
   // ABOUT AUTHOR
-  // -------------------------
+  // ---------------------------------
 
   function animateAboutAuthor() {
-    fadeIn('.about-author .author-title-wrap');
+    reveal('.about-author .author-title-wrap');
+    reveal('.about-author .author-name');
 
-    fadeIn('.about-author .author-name', {
-      y: 24,
-    });
-
-    fadeIn('.about-author .author-item', {
+    revealGroup('.about-author .author-item', {
       y: 22,
-      duration: 0.65,
     });
 
-    fadeIn('.about-author .author-stories', {
-      y: 26,
-    });
-
-    fadeIn('.about-author .author-stars-wrap', {
-      y: 26,
-    });
-
-    fadeIn('.about-author .author-brands-wrap', {
-      y: 26,
-    });
+    reveal('.about-author .author-stories');
+    reveal('.about-author .author-stars-wrap');
+    reveal('.about-author .author-brands-wrap');
   }
 
-  // -------------------------
+  // ---------------------------------
   // LECTORS
-  // -------------------------
+  // ---------------------------------
 
   function animateLectors() {
-    fadeIn('.lectors .lectors-title-wrap');
+    reveal('.lectors .lectors-title-wrap');
 
-    fadeIn('.lectors .swiper-slide', {
+    revealGroup('.lectors .swiper-slide', {
       y: 28,
       duration: 0.7,
     });
 
-    fadeIn('.lectors .swiper-btns-box', {
+    reveal('.lectors .swiper-btns-box', {
       y: 18,
-      duration: 0.6,
       start: 'top 92%',
     });
   }
 
-  // -------------------------
+  // ---------------------------------
   // TARIFFS
-  // -------------------------
+  // ВАЖНО: tariff-item НЕ АНИМИРУЕМ
+  // ---------------------------------
 
   function animateTariffs() {
-    fadeIn('.tariffs .tariff-title-wrap');
-
-    fadeIn('.tariffs .tariff-desc-box', {
-      y: 24,
-    });
-
-    fadeIn('.tariffs .tariff-control-box', {
+    reveal('.tariffs .tariff-title-wrap');
+    reveal('.tariffs .tariff-desc-box');
+    reveal('.tariffs .tariff-control-box', {
       y: 20,
     });
 
-    fadeIn('.tariffs .tariff-item', {
-      y: 28,
-      duration: 0.7,
-    });
+    /*
+      НЕ ДЕЛАЕМ:
+      reveal('.tariffs .tariff-item')
+
+      Потому что карточки тарифов переключаются через JS/display.
+      GSAP вообще не должен вмешиваться в их состояние.
+    */
   }
 
-  // -------------------------
+  // ---------------------------------
   // BONUSES
-  // -------------------------
+  // ---------------------------------
 
   function animateBonuses() {
-    fadeIn('.bonuses .bonuses-title-wrap');
+    reveal('.bonuses .bonuses-title-wrap');
 
-    fadeIn('.bonuses .bonus-item', {
+    revealGroup('.bonuses .bonus-item', {
       y: 28,
       duration: 0.7,
     });
 
-    fadeIn('.bonuses .bonus-btn-wrap', {
+    reveal('.bonuses .bonus-btn-wrap', {
       y: 20,
       start: 'top 90%',
     });
   }
 
-  // -------------------------
+  // ---------------------------------
   // REVIEWS
-  // -------------------------
+  // ---------------------------------
 
   function animateReviews() {
-    fadeIn('.reviews .reviews-title-wrap');
+    reveal('.reviews .reviews-title-wrap');
 
-    fadeIn('.reviews .swiper-slide', {
+    revealGroup('.reviews .swiper-slide', {
       y: 28,
       duration: 0.7,
     });
 
-    fadeIn('.reviews .swiper-btns-box', {
+    reveal('.reviews .swiper-btns-box', {
       y: 18,
-      duration: 0.6,
       start: 'top 92%',
     });
   }
 
-  // -------------------------
+  // ---------------------------------
   // FAQ
-  // -------------------------
+  // ВАЖНО: faq-item НЕ АНИМИРУЕМ
+  // ---------------------------------
 
   function animateFaq() {
-    fadeIn('.faq .faq-title-wrap');
+    reveal('.faq .faq-title-wrap');
+    reveal('.faq .faq-desc');
 
-    fadeIn('.faq .faq-desc', {
-      y: 24,
-    });
+    /*
+      НЕ ДЕЛАЕМ:
+      reveal('.faq .faq-item')
 
-    fadeIn('.faq .faq-item', {
-      y: 24,
-      duration: 0.65,
-    });
+      FAQ меняет высоту.
+      Пусть accordion.js занимается только accordion,
+      а GSAP сюда не лезет.
+    */
   }
 
-  // -------------------------
+  // ---------------------------------
   // FOOTER
-  // -------------------------
+  // ---------------------------------
 
   function animateFooter() {
-    fadeIn('.footer .support-letter-box');
+    reveal('.footer .support-letter-box');
 
-    fadeIn('.footer .support-link', {
+    reveal('.footer .support-link', {
       y: 18,
-      duration: 0.6,
     });
 
-    fadeIn('.footer .footer-wrapper', {
-      y: 26,
-    });
+    reveal('.footer .footer-wrapper');
 
-    fadeIn('.footer .disign-creator', {
+    reveal('.footer .disign-creator', {
       y: 18,
-      duration: 0.6,
     });
 
-    fadeIn('.footer .footer-logo', {
+    reveal('.footer .footer-logo', {
       y: 22,
-      duration: 0.65,
     });
   }
 
-  // -------------------------
+  // ---------------------------------
   // INIT
-  // -------------------------
+  // ---------------------------------
 
-  function initAnimations() {
-    animateHero();
-    animateStudyForYou();
-    animateProgram();
-    animateStudyFormat();
-    animateResult();
-    animateAboutAuthor();
-    animateLectors();
-    animateTariffs();
-    animateBonuses();
-    animateReviews();
-    animateFaq();
-    animateFooter();
-  }
-
-  initAnimations();
-
-  window.addEventListener(
-    'load',
-    () => {
-      ScrollTrigger.refresh();
-    },
-    { once: true }
-  );
+  animateHero();
+  animateStudyForYou();
+  animateProgram();
+  animateStudyFormat();
+  animateResult();
+  animateAboutAuthor();
+  animateLectors();
+  animateTariffs();
+  animateBonuses();
+  animateReviews();
+  animateFaq();
+  animateFooter();
 });
